@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create a new match — That's All Vokes</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="theme.js"></script>
+<script>if (new URLSearchParams(location.search).has('embed')) document.documentElement.classList.add('embed');</script>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <button id="themeBtn" type="button" title="Theme">◐</button>
+    <div class="brand">
+      <img class="crest" src="crest.png" alt="That&#39;s All Vokes crest" width="58" height="58">
+      <h1>Create a new match</h1>
+    </div>
+    <div class="sub">Admin form. Create the fixture first, then share the player link. ·
+      <a href="index.html">← Back to stats</a> ·
+      <a href="edit-match.html">Update a match →</a></div>
+    <nav><button class="on">New match</button></nav>
+  </div>
+</header>
+
+<div class="wrap" style="max-width:640px">
+  <div id="msg"></div>
+
+  <!-- ---------------------------------------------- import from the league -->
+  <div class="card" style="margin-bottom:28px">
+    <h3 style="margin-bottom:8px">Import fixtures from playfiveaside</h3>
+    <div class="hint" style="margin-bottom:12px">
+      Copy the league fixtures page and paste it below — every remaining fixture
+      gets created in one go.
+    </div>
+
+    <div class="notice" style="background:var(--panel-2);border:1px solid var(--line)">
+      <ol style="margin:0;padding-left:20px;line-height:1.8">
+        <li><a id="openLeague" href="#" target="_blank" rel="noopener"><strong>Open the league fixtures page ↗</strong></a>
+            <span class="muted small">(opens in a new tab)</span></li>
+        <li>Select everything on that page — <strong>⌘A</strong> (Mac) or <strong>Ctrl+A</strong> (Windows)</li>
+        <li>Copy it — <strong>⌘C</strong> / <strong>Ctrl+C</strong></li>
+        <li>Come back here and paste into the box below — <strong>⌘V</strong> / <strong>Ctrl+V</strong></li>
+        <li>Press <strong>Read fixtures</strong>, then confirm the list</li>
+      </ol>
+      <div class="small muted" style="margin-top:10px">
+        Don't worry about the mess — scores, goalscorers and adverts are stripped out
+        automatically. Nothing is saved until you confirm.
+      </div>
+    </div>
+
+    <textarea id="pasteArea" rows="6" style="width:100%;margin-top:12px"
+              placeholder="Paste the whole fixtures page here — long and messy is fine…"></textarea>
+    <button type="button" class="btn" id="parseBtn" style="margin-top:8px">Read fixtures</button>
+
+    <details style="margin-top:14px">
+      <summary class="muted small" style="cursor:pointer">Different league? Change the page link</summary>
+      <input type="url" id="leagueUrl" style="width:100%;margin-top:8px"
+             placeholder="https://playfiveaside.com/active-leagues/…/fixtures-and-results"
+             value="https://playfiveaside.com/active-leagues/stockwell--vauxhall-6aside/fixtures-and-results">
+      <div class="small muted" style="margin-top:6px">
+        Only changes where step 1 points — paste still works from any league page.
+      </div>
+    </details>
+
+    <div id="importResult" style="margin-top:14px"></div>
+  </div>
+
+  <h3>Or create one manually</h3>
+  <form id="f" style="display:none">
+
+    <div class="field">
+      <label for="season">Season</label>
+      <select id="season"></select>
+      <input type="text" id="seasonNew" placeholder="e.g. Aug 2026 - Nov 2026" style="margin-top:8px;display:none">
+    </div>
+
+    <div class="field">
+      <label for="opposition">Opposition *</label>
+      <select id="opposition" required></select>
+      <input type="text" id="oppositionNew" placeholder="Name of the new team" style="margin-top:8px;display:none">
+    </div>
+
+    <div class="field">
+      <label for="played_on">Match date *</label>
+      <input type="date" id="played_on" required>
+      <div class="hint" id="fixturePreview">The fixture will be named automatically.</div>
+    </div>
+
+    <div class="field">
+      <label for="gf">Goals scored</label>
+      <input type="number" id="gf" min="0" step="1">
+    </div>
+
+    <div class="field">
+      <label for="ga">Goals conceded</label>
+      <input type="number" id="ga" min="0" step="1">
+    </div>
+
+    <div class="field">
+      <label>Match result</label>
+      <div class="hint">Filled in automatically from the score — override if needed.</div>
+      <div class="radios">
+        <label><input type="radio" name="result" value="Win">Win</label>
+        <label><input type="radio" name="result" value="Draw">Draw</label>
+        <label><input type="radio" name="result" value="Loss">Loss</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="keeper">Opponent has keeper</label>
+      <select id="keeper">
+        <option value="">Unknown</option>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="weather">Weather report</label>
+      <input type="text" id="weather" placeholder="🍹 perfect (aka mild)">
+    </div>
+
+    <div class="field">
+      <label for="one_where">The one where…</label>
+      <input type="text" id="one_where" placeholder="Wez tied a ribbon on his boot">
+    </div>
+
+    <div class="field">
+      <label for="notes">Notes</label>
+      <textarea id="notes" rows="3"></textarea>
+    </div>
+
+    <button class="btn" type="submit">Create match</button>
+  </form>
+</div>
+
+<script src="config.js"></script>
+<script src="fixtures-parser.js"></script>
+<script src="new-match.js"></script>
+</body>
+</html>

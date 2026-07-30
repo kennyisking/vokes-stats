@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — That's All Vokes</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="theme.js"></script>
+</head>
+<body>
+
+<!-- password gate — shown until the right word is typed -->
+<div class="gate" id="gate">
+  <form class="card gate-card" id="gateForm">
+    <h3 style="margin-bottom:6px">Admin area</h3>
+    <div class="hint" style="margin-bottom:14px">Enter the password to manage matches and stats.</div>
+    <div class="field" style="margin-bottom:12px">
+      <label for="pw">Password</label>
+      <input type="password" id="pw" autocomplete="off" autofocus>
+    </div>
+    <div id="gateMsg"></div>
+    <button class="btn" type="submit">Unlock</button>
+    <div class="small muted" style="margin-top:14px">
+      <a href="index.html">← Back to stats</a>
+    </div>
+  </form>
+</div>
+
+<div id="app" style="display:none">
+<header>
+  <div class="head-inner">
+    <button id="themeBtn" type="button" title="Theme">◐</button>
+    <div class="brand">
+      <img class="crest" src="crest.png" alt="That&#39;s All Vokes crest" width="58" height="58">
+      <h1>Admin</h1>
+    </div>
+    <div class="sub">Manage matches and raw stats. ·
+      <a href="index.html">← Back to stats</a> ·
+      <a href="#" id="lock">Lock admin</a></div>
+    <nav>
+      <button data-tab="create" class="on">Create a match</button>
+      <button data-tab="update">Update a match</button>
+      <button data-tab="edit">Edit stats</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="tab-panel on" data-panel="create">
+    <iframe class="admin-frame" data-src="new-match.html?embed=1" title="Create a match"></iframe>
+  </section>
+
+  <section class="tab-panel" data-panel="update">
+    <iframe class="admin-frame" data-src="edit-match.html?embed=1" title="Update a match"></iframe>
+  </section>
+
+  <section class="tab-panel" data-panel="edit" style="max-width:640px">
+    <div class="notice" style="background:var(--panel-2);border:1px solid var(--line)">
+      <strong>Edit raw data.</strong> Pick a table, choose a row, change what you
+      need and save. Blank a field to clear it. Every change is written straight
+      to the database — there's no undo, so take care.
+    </div>
+    <div id="editMsg"></div>
+    <div id="editor"></div>
+  </section>
+</div>
+</div>
+
+<script src="config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Submit a performance — That's All Vokes</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="theme.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <button id="themeBtn" type="button" title="Theme">◐</button>
+    <div class="brand">
+      <img class="crest" src="crest.png" alt="That&#39;s All Vokes crest" width="58" height="58">
+      <h1>That's All Vokes Performances</h1>
+    </div>
+    <div class="sub">The post-game form. Complete once per player per match. ·
+      <a href="index.html">← Back to stats</a> ·
+      <a href="new-match.html">Create a match →</a></div>
+    <nav><button class="on">Submit</button></nav>
+  </div>
+</header>
+
+<div class="wrap" style="max-width:640px">
+  <div id="msg"></div>
+  <form id="f" style="display:none">
+
+    <div class="field">
+      <label for="match">Match 🏟 *</label>
+      <select id="match" name="match_id" required></select>
+      <div class="hint">Pre-fill this by sharing a link ending <code>?match=123</code> — nobody picks the wrong fixture.</div>
+    </div>
+
+    <div class="field">
+      <label for="player">Player 🧑 *</label>
+      <select id="player" name="player_id" required></select>
+    </div>
+
+    <div class="field"><label for="goals">Goals ⚽</label>
+      <input type="number" id="goals" name="goals" min="0" step="1"></div>
+
+    <div class="field"><label for="penalties">Penalties 🎯</label>
+      <input type="number" id="penalties" name="penalties" min="0" step="1"></div>
+
+    <div class="field"><label for="assists">Assists 🤝</label>
+      <input type="number" id="assists" name="assists" min="0" step="1"></div>
+
+    <div class="field"><label for="errors">Errors leading to goals 🤦</label>
+      <input type="number" id="errors" name="errors" min="0" step="1"></div>
+
+    <div class="field"><label for="pints">Pints 🍺</label>
+      <div class="hint">Best guess is fine.</div>
+      <input type="number" id="pints" name="pints" min="0" step="0.5"></div>
+
+    <div class="field"><label for="shots">Shots out of the cage 🖼</label>
+      <div class="hint">Includes any time you kicked the ball directly out the cage.</div>
+      <input type="number" id="shots" name="shots_out_of_cage" min="0" step="1"></div>
+
+    <div class="field"><label for="xgf">Expected goals for 🚩</label>
+      <div class="hint">How many goals Vokes should have scored.</div>
+      <input type="number" id="xgf" name="xg_for" min="0" step="0.1"></div>
+
+    <div class="field"><label for="xga">Expected goals against ⛔</label>
+      <div class="hint">How many goals Vokes should have conceded.</div>
+      <input type="number" id="xga" name="xg_against" min="0" step="0.1"></div>
+
+    <div class="field"><label>Spice rating 🌶</label>
+      <div class="hint">How feisty the game was.</div>
+      <div class="radios">
+        <label><input type="radio" name="spice_rating" value="1">1 – Chile Verde</label>
+        <label><input type="radio" name="spice_rating" value="2">2 – Guajilo</label>
+        <label><input type="radio" name="spice_rating" value="3">3 – Yellow Hot</label>
+        <label><input type="radio" name="spice_rating" value="4">4 – Habanero</label>
+        <label><input type="radio" name="spice_rating" value="5">5 – Carolina Reaper</label>
+      </div></div>
+
+    <div class="field"><label>Clean sheet whilst in goal 🧤</label>
+      <div class="radios">
+        <label><input type="radio" name="clean_sheet" value="true">True</label>
+        <label><input type="radio" name="clean_sheet" value="false">False</label>
+        <label><input type="radio" name="clean_sheet" value="">N/A</label>
+      </div></div>
+
+    <div class="field"><label>Disciplinary procedures 👮</label>
+      <div class="radios">
+        <label><input type="radio" name="disciplinary" value="Not for me">Not for me</label>
+        <label><input type="radio" name="disciplinary" value="Just a warning 😇">Just a warning 😇</label>
+        <label><input type="radio" name="disciplinary" value="2 minutes in the bin">2 minutes in the bin</label>
+        <label><input type="radio" name="disciplinary" value="Naughty step">Naughty step</label>
+      </div></div>
+
+    <div class="field"><label for="desc">Game description 🎦</label>
+      <div class="hint">Describe the game in 3–5 words.</div>
+      <input type="text" id="desc" name="game_description"></div>
+
+    <div class="field"><label for="mem">Memorable moment 🆕</label>
+      <div class="hint">The single moment you remember the most. Keep it punchy.</div>
+      <input type="text" id="mem" name="memorable_moment"></div>
+
+    <div class="field"><label>Paid? 💰 *</label>
+      <div class="radios">
+        <label><input type="radio" name="paid" value="Yes I've already paid" required>Yes I've already paid</label>
+        <label><input type="radio" name="paid" value="No I'm a bad bloke and will pay now">No I'm a bad bloke and will pay now</label>
+        <label><input type="radio" name="paid" value="Unknown">Unknown</label>
+      </div></div>
+
+    <button class="btn" type="submit">Submit</button>
+    <div class="hint" style="margin-top:10px">
+      One entry per player per match. Submissions can't be edited here — ask an admin to correct anything.
+    </div>
+  </form>
+</div>
+
+<script src="config.js"></script>
+<script src="submit.js"></script>
+</body>
+</html>

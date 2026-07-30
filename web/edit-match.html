@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Update a match — That's All Vokes</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="theme.js"></script>
+<script>if (new URLSearchParams(location.search).has('embed')) document.documentElement.classList.add('embed');</script>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <button id="themeBtn" type="button" title="Theme">◐</button>
+    <div class="brand">
+      <img class="crest" src="crest.png" alt="That&#39;s All Vokes crest" width="58" height="58">
+      <h1>Update a match</h1>
+    </div>
+    <div class="sub">Post-game admin. Leave any field blank to keep its current value. ·
+      <a href="index.html">← Back to stats</a> ·
+      <a href="new-match.html">Create a match →</a></div>
+    <nav><button class="on">Update</button></nav>
+  </div>
+</header>
+
+<div class="wrap" style="max-width:640px">
+  <div id="msg"></div>
+  <form id="f" style="display:none">
+
+    <div class="field">
+      <label for="match">Linked match *</label>
+      <select id="match" required></select>
+      <div class="hint" id="current"></div>
+    </div>
+
+    <div class="field">
+      <label for="opposition">Opposition</label>
+      <div class="hint">Only if it needs correcting.</div>
+      <select id="opposition"></select>
+    </div>
+
+    <div class="field">
+      <label>Match result</label>
+      <div class="radios">
+        <label><input type="radio" name="result" value="Win">Win</label>
+        <label><input type="radio" name="result" value="Draw">Draw</label>
+        <label><input type="radio" name="result" value="Loss">Loss</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="gf">Goals scored</label>
+      <input type="number" id="gf" min="0" step="1">
+    </div>
+
+    <div class="field">
+      <label for="ga">Goals conceded</label>
+      <input type="number" id="ga" min="0" step="1">
+    </div>
+
+    <div class="field">
+      <label>Weather report</label>
+      <div class="radios" id="weather">
+        <label><input type="radio" name="weather" value="🌊 extra rain">🌊 extra rain</label>
+        <label><input type="radio" name="weather" value="☔️ rain">☔️ rain</label>
+        <label><input type="radio" name="weather" value="⛸️ slippy af">⛸️ slippy af</label>
+        <label><input type="radio" name="weather" value="☃️ just cold">☃️ just cold</label>
+        <label><input type="radio" name="weather" value="🌶️ Extra hot">🌶️ Extra hot</label>
+        <label><input type="radio" name="weather" value="🍹 perfect (aka mild)">🍹 perfect (aka mild)</label>
+        <label><input type="radio" name="weather" value="🍲 quite hot">🍲 quite hot</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="motm">MOM</label>
+      <select id="motm"></select>
+    </div>
+
+    <div class="field">
+      <label for="dotd">DOD</label>
+      <select id="dotd"></select>
+    </div>
+
+    <div class="field">
+      <label>Opponent has keeper</label>
+      <div class="radios">
+        <label><input type="radio" name="keeper" value="true">True</label>
+        <label><input type="radio" name="keeper" value="false">False</label>
+        <label><input type="radio" name="keeper" value="null">Unknown</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="one_where">Update 'The one where…'</label>
+      <div class="hint">Keep it brief and memorable.</div>
+      <input type="text" id="one_where">
+    </div>
+
+    <div class="field">
+      <label for="submitted_by">Submitted by *</label>
+      <div class="hint">Who are ya</div>
+      <select id="submitted_by" required></select>
+    </div>
+
+    <button class="btn" type="submit">Update the match</button>
+  </form>
+</div>
+
+<script src="config.js"></script>
+<script src="edit-match.js"></script>
+</body>
+</html>

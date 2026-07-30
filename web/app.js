@@ -516,7 +516,7 @@ function playerDetail(id) {
     ${stat('Goals', n1(p.goals), `${n1(p.goals_per_game)} per game`)}
     ${stat('Assists', n1(p.assists), '')}
     ${stat('Record', `${p.w}–${p.d}–${p.l}`, `${p.win_pct ?? '–'}% win rate`)}
-    ${stat('Pints', n1(p.pints), `${p.clean_sheets} clean stints in goal`)}
+    ${stat('Pints', n1(p.pints), `${(num(p.pints) / (num(p.apps) || 1)).toFixed(2)} per game`)}
   </div>`));
   root.append(el(`<div class="grid cols-4" style="margin-top:12px">
     ${stat('MOM', p.motm, 'awards won')}

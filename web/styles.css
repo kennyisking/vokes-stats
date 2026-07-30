@@ -112,7 +112,10 @@ header {
   width: 58px; height: 58px; flex: none; border-radius: 50%;
   background: #fff;
   box-shadow: 0 0 0 2px var(--card-border);
+  transition: transform .12s, box-shadow .12s;
 }
+.crest:hover { transform: scale(1.05); box-shadow: 0 0 0 2px var(--accent); }
+.crest:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--accent); }
 @media (max-width: 520px) { .crest { width: 46px; height: 46px; } }
 
 #themeBtn {

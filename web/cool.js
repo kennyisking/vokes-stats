@@ -150,8 +150,7 @@ function coolStats() {
     if (!data.some(d => d.n)) return;
     const max = Math.max(...data.map(d => d.v)) * 1.15;
 
-    section('Team pints per match, by result',
-      'A played match with no pints logged counts as zero, not skipped.');
+    section('Team pints per match, by result');
     root.append(card(`
       <div style="display:flex;flex-direction:column;gap:12px">
         ${data.map(d => `
@@ -208,8 +207,7 @@ function coolStats() {
               fill="${isPeak ? 'var(--accent)' : 'var(--muted)'}">${d.m}</text>`;
     }).join('');
 
-    section('Pints per match, by calendar month',
-      'Team pints per match, averaged by month of the year. Every played match counts — no pints logged means zero. Number above each bar is the average.');
+    section('Pints per match, by calendar month');
     root.append(card(`
       <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;min-width:560px">
         <line x1="${PAD}" y1="${base}" x2="${W - PAD}" y2="${base}" stroke="var(--muted)" opacity=".35"/>

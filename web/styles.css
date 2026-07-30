@@ -434,3 +434,32 @@ td, .stat .v { font-variant-numeric: tabular-nums; }
 .stat .v { color: var(--text); }
 .modal-head h3 { font-family: var(--display); font-size: 20px !important; letter-spacing: .04em; }
 .overlay .modal { border-radius: var(--radius); }
+
+/* momentum scrolling for the horizontally-scrollable tables/charts on touch */
+.tablewrap, .card[style*="overflow-x"] { -webkit-overflow-scrolling: touch; }
+
+/* ------------------------------------------------- mobile refinements */
+@media (max-width: 520px) {
+  /* 16px stops iOS Safari zooming/jumping when a field gains focus */
+  input[type=search], input[type=text], input[type=number],
+  select, textarea { font-size: 16px; }
+  /* the search box fills its row rather than sitting at a fixed 240px */
+  input[type=search] { min-width: 0; width: 100%; }
+  .controls { gap: 8px; }
+
+  /* reclaim vertical space so the stats sit higher up the first screen */
+  header { margin-bottom: 18px; }
+  .head-inner { padding: 16px 14px 0; }
+  #themeBtn { top: 16px; right: 14px; width: 34px; height: 34px; }
+  nav { gap: 2px; }
+  nav button { font-size: 15px; padding: 8px 9px; letter-spacing: .02em; }
+
+  /* a touch more width for tables and charts */
+  .wrap { padding: 0 13px 64px; }
+  th, td { padding: 8px 8px; }
+
+  /* modals hug the screen a little tighter */
+  .overlay { padding: 12px; }
+  .modal-head, .modal-foot { padding-left: 14px; padding-right: 14px; }
+  .modal-body { padding: 6px 14px 12px; }
+}

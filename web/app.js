@@ -533,7 +533,8 @@ function playerDetail(id) {
       return i === -1 ? null : { b, rank: i + 1, total: rows.length, v: rows[i].v };
     })
     .filter(Boolean)
-    .sort((a, b) => a.rank / a.total - b.rank / b.total);
+    // best position first (1st, 2nd, …); ties broken by the bigger field
+    .sort((a, b) => a.rank - b.rank || b.total - a.total);
 
   if (ranks.length) {
     root.append(el('<h2>Squad ranking</h2>'));

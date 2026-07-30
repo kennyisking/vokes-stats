@@ -1,0 +1,10 @@
+{
+  // Deploys the static site to the existing Worker "vokes"
+  // (served at vokes.golaso.workers.dev). No server code — just the
+  // files in web/ served as static assets.
+  "name": "vokes",
+  "compatibility_date": "2025-06-01",
+  "assets": {
+    "directory": "./web"
+  }
+}

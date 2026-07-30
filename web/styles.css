@@ -254,6 +254,16 @@ input[type=search] { min-width: 240px; }
 /* ---------------------------------------------------------------- player */
 .back { background: none; border: 0; color: var(--accent); cursor: pointer; font: inherit; padding: 0; margin-bottom: 14px; }
 .player-head { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; }
+
+/* recruitment lineage on a player page */
+.lineage {
+  display: flex; flex-wrap: wrap; gap: 6px 24px; margin-top: 12px;
+  padding: 10px 14px; font-size: 14px; line-height: 1.5;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px;
+}
+.lin-label { color: var(--muted); margin-right: 5px; }
+.lineage .plink { cursor: pointer; }
+.lineage .plink:hover { filter: brightness(1.12); }
 .player-head .pav-plus { width: 22px; height: 22px; font-size: 16px; line-height: 20px; right: 0; bottom: 0; }
 
 /* ------------------------------------------------------------------ form */

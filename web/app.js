@@ -492,6 +492,25 @@ function playerDetail(id) {
     <div class="sub" style="margin:0">${p.apps} appearances · ${date(p.first_game)} → ${date(p.last_game)} · ${p.seasons} seasons</div></div>
   </div>`));
 
+  // recruitment lineage — who brought them in, and who they brought in.
+  // Links through to any of those players who have a page of their own.
+  const recruits = DB.recruits || [];
+  const recBy = (recruits.find(r => r.name === p.name)?.recruited_by || '').trim();
+  const broughtIn = recruits
+    .filter(r => (r.recruited_by || '').trim() === p.name)
+    .map(r => r.name)
+    .sort((a, b) => a.localeCompare(b));
+  const pLink = (name) => {
+    const t = DB.players.find(x => x.name === name);
+    return t ? `<a class="plink" data-goto="${t.id}" role="button" tabindex="0">${esc(name)}</a>` : esc(name);
+  };
+  if (recBy || broughtIn.length) {
+    root.append(el(`<div class="lineage">
+      ${recBy ? `<div class="lin-item"><span class="lin-label">🌱 Recruited by</span> ${pLink(recBy)}</div>` : ''}
+      ${broughtIn.length ? `<div class="lin-item"><span class="lin-label">🤝 Brought in ${broughtIn.length}</span> ${broughtIn.map(pLink).join(', ')}</div>` : ''}
+    </div>`));
+  }
+
   const stat = (k, v, note = '') => `<div class="card stat"><div class="k">${k}</div><div class="v">${v}</div><div class="n">${note}</div></div>`;
   root.append(el(`<div class="grid cols-4" style="margin-top:16px">
     ${stat('Goals', n1(p.goals), `${n1(p.goals_per_game)} per game`)}
@@ -531,6 +550,13 @@ function playerDetail(id) {
 
   root.append(el(`<h2>Matches (${mine.length})</h2>`));
   root.append(matchList(mine, p.name));
+
+  // lineage links jump straight to that player's page
+  root.querySelectorAll('[data-goto]').forEach(a => {
+    const go = () => showPlayer(Number(a.dataset.goto));
+    a.onclick = go;
+    a.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } };
+  });
   return root;
 }
 

@@ -140,16 +140,18 @@ function coolStats() {
   (() => {
     const buckets = { Win: [], Draw: [], Loss: [] };
     chron.forEach(m => {
-      if (!m.result) return;
+      if (!m.result || !(m.squad && m.squad.length)) return;   // needs a recorded squad
+      // a match with a squad but no pints logged counts as a genuine 0
       const p = (m.squad || []).reduce((s, x) => s + Number(x.pints || 0), 0);
-      if (p > 0) buckets[m.result].push(p);
+      buckets[m.result].push(p);
     });
     const avg = a => a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0;
     const data = ['Win', 'Draw', 'Loss'].map(r => ({ r, v: avg(buckets[r]), n: buckets[r].length }));
     if (!data.some(d => d.n)) return;
     const max = Math.max(...data.map(d => d.v)) * 1.15;
 
-    section('Team pints per match, by result');
+    section('Team pints per match, by result',
+      'A played match with no pints logged counts as zero, not skipped.');
     root.append(card(`
       <div style="display:flex;flex-direction:column;gap:12px">
         ${data.map(d => `
@@ -172,11 +174,11 @@ function coolStats() {
                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const per = MONTHS.map(() => ({ sum: 0, n: 0 }));
     chron.forEach(m => {
+      if (!(m.squad && m.squad.length)) return;   // needs a recorded squad
+      // no pints logged for a played match counts as 0, not as missing
       const pints = (m.squad || []).reduce((s, x) => s + Number(x.pints || 0), 0);
-      if (pints > 0) {                         // same "logged only" rule as the result chart
-        const mo = new Date(m.played_on).getUTCMonth();
-        per[mo].sum += pints; per[mo].n += 1;
-      }
+      const mo = new Date(m.played_on).getUTCMonth();
+      per[mo].sum += pints; per[mo].n += 1;
     });
     const data = per.map((d, i) => ({ m: MONTHS[i], v: d.n ? d.sum / d.n : 0, n: d.n }));
     if (!data.some(d => d.n)) return;
@@ -207,7 +209,7 @@ function coolStats() {
     }).join('');
 
     section('Pints per match, by calendar month',
-      'Team pints per match, averaged by month of the year. Only matches where pints were logged; number above each bar is the average.');
+      'Team pints per match, averaged by month of the year. Every played match counts — no pints logged means zero. Number above each bar is the average.');
     root.append(card(`
       <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;min-width:560px">
         <line x1="${PAD}" y1="${base}" x2="${W - PAD}" y2="${base}" stroke="var(--muted)" opacity=".35"/>

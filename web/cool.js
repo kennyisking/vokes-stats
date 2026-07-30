@@ -166,6 +166,55 @@ function coolStats() {
       </div>`));
   })();
 
+  /* ============================================ 4b. pints seasonality */
+  (() => {
+    const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const per = MONTHS.map(() => ({ sum: 0, n: 0 }));
+    chron.forEach(m => {
+      const pints = (m.squad || []).reduce((s, x) => s + Number(x.pints || 0), 0);
+      if (pints > 0) {                         // same "logged only" rule as the result chart
+        const mo = new Date(m.played_on).getUTCMonth();
+        per[mo].sum += pints; per[mo].n += 1;
+      }
+    });
+    const data = per.map((d, i) => ({ m: MONTHS[i], v: d.n ? d.sum / d.n : 0, n: d.n }));
+    if (!data.some(d => d.n)) return;
+    const peak = data.reduce((a, b) => (b.v > a.v ? b : a));
+    const max = peak.v * 1.18 || 1;
+
+    const W = 860, H = 250, PAD = 34, BOT = 26;
+    const colW = (W - PAD * 2) / 12;
+    const barW = colW * 0.58;
+    const cx = i => PAD + colW * i + colW / 2;
+    const y = v => H - BOT - (v / max) * (H - BOT - PAD);
+    const base = H - BOT;
+
+    const cols = data.map((d, i) => {
+      const bx = cx(i) - barW / 2, by = y(d.v);
+      const isPeak = d.n && d.v === peak.v;
+      const label = d.n
+        ? `<text x="${cx(i)}" y="${by - 5}" font-size="10" fill="var(--muted)" text-anchor="middle">${d.v.toFixed(1)}</text>`
+        : '';
+      return `
+        <rect x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${barW.toFixed(1)}"
+              height="${(base - by).toFixed(1)}" rx="3" fill="var(--accent)"
+              opacity="${d.n ? (isPeak ? 1 : 0.5) : 0.1}">
+          <title>${d.m}: ${d.n ? d.v.toFixed(2) + ' pints/match · ' + d.n + ' match' + (d.n === 1 ? '' : 'es') : 'no pints logged'}</title>
+        </rect>${label}
+        <text x="${cx(i)}" y="${H - 8}" font-size="11" text-anchor="middle"
+              fill="${isPeak ? 'var(--accent)' : 'var(--muted)'}">${d.m}</text>`;
+    }).join('');
+
+    section('Pints per match, by calendar month',
+      'Team pints per match, averaged by month of the year. Only matches where pints were logged; number above each bar is the average.');
+    root.append(card(`
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;min-width:560px">
+        <line x1="${PAD}" y1="${base}" x2="${W - PAD}" y2="${base}" stroke="var(--muted)" opacity=".35"/>
+        ${cols}
+      </svg>`));
+  })();
+
   /* ====================================================== 5. weather */
   (() => {
     const MIN_MATCHES = 5;

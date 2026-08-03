@@ -37,10 +37,21 @@ function coolStats() {
     const peak = pts.reduce((a, b) => (b.cum > a.cum ? b : a));
     const last = pts[pts.length - 1];
 
-    const mark = (p, label, dy) => `
+    const anchor = p => (p.i > maxI * 0.8 ? 'end' : p.i < maxI * 0.2 ? 'start' : 'middle');
+    // `lead` draws a short connector from the dot to a label offset away from it,
+    // used when two labels would otherwise sit on top of each other.
+    const mark = (p, label, dy, lead) => `
+      ${lead ? `<line x1="${x(p.i)}" y1="${y(p.cum)}" x2="${x(p.i)}"
+             y2="${(y(p.cum) + dy + (dy > 0 ? -9 : 7)).toFixed(1)}"
+             stroke="var(--muted)" stroke-width="1" opacity=".55"/>` : ''}
       <circle cx="${x(p.i)}" cy="${y(p.cum)}" r="4" fill="var(--accent)"/>
-      <text x="${x(p.i)}" y="${y(p.cum) + dy}" font-size="11" fill="var(--muted)"
-            text-anchor="${p.i > maxI * 0.8 ? 'end' : p.i < maxI * 0.2 ? 'start' : 'middle'}">${label}</text>`;
+      <text x="${x(p.i)}" y="${(y(p.cum) + dy).toFixed(1)}" font-size="11" fill="var(--muted)"
+            text-anchor="${anchor(p)}">${label}</text>`;
+
+    // When the current total is at/near the all-time peak the two labels collide.
+    // Keep the peak above its point and drop "current" below, with a connector.
+    const clash = Math.abs(x(peak.i) - x(last.i)) < 64
+               && Math.abs(y(peak.cum) - y(last.cum)) < 15;
 
     const yr = d => new Date(d).getUTCFullYear();
 
@@ -58,7 +69,7 @@ function coolStats() {
         <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2"/>
         ${mark(trough, `${trough.cum}`, 18)}
         ${mark(peak, `+${peak.cum}`, -10)}
-        ${mark(last, `${last.cum > 0 ? '+' : ''}${last.cum}`, -10)}
+        ${mark(last, `${last.cum > 0 ? '+' : ''}${last.cum}${clash ? ' now' : ''}`, clash ? 20 : -10, clash)}
         <text x="${PAD}" y="${H - 8}" font-size="11" fill="var(--muted)">${yr(pts[0].m.played_on)}</text>
         <text x="${W - PAD}" y="${H - 8}" font-size="11" fill="var(--muted)" text-anchor="end">${yr(last.m.played_on)}</text>
       </svg>`));

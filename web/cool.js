@@ -45,8 +45,9 @@ function coolStats() {
              y2="${(y(p.cum) + dy + (dy > 0 ? -9 : 7)).toFixed(1)}"
              stroke="var(--muted)" stroke-width="1" opacity=".55"/>` : ''}
       <circle cx="${x(p.i)}" cy="${y(p.cum)}" r="4" fill="var(--accent)"/>
-      <text x="${x(p.i)}" y="${(y(p.cum) + dy).toFixed(1)}" font-size="11" fill="var(--muted)"
-            text-anchor="${anchor(p)}">${label}</text>`;
+      <text x="${x(p.i)}" y="${(y(p.cum) + dy).toFixed(1)}" font-size="11"
+            paint-order="stroke" stroke="var(--panel)" stroke-width="3.5" stroke-linejoin="round"
+            fill="var(--muted)" text-anchor="${anchor(p)}">${label}</text>`;
 
     // When the current total is at/near the all-time peak the two labels collide.
     // Keep the peak above its point and drop "current" below, with a connector.

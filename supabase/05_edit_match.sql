@@ -30,8 +30,11 @@ create trigger trg_touch_match
   before update on matches
   for each row execute function touch_match();
 
--- match_detail needs rebuilding to expose the new columns
-create or replace view match_detail with (security_invoker = true) as
+-- match_detail needs rebuilding to expose the new columns.
+-- Drop first: the live view has a different column order, and
+-- `create or replace view` cannot reorder/rename existing columns.
+drop view if exists match_detail;
+create view match_detail with (security_invoker = true) as
 select
   m.id, m.fixture_name, m.played_on,
   o.name as opposition, s.name as season,

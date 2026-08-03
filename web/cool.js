@@ -312,11 +312,16 @@ function coolStats() {
     }
 
     section('First to most recent appearance');
+    // Year lines share the bars' track: inset by the name column (132px + 10px
+    // gap) on the left and the apps column (52px + 10px gap) on the right, so
+    // gridlines and bars line up at every width — including narrow mobile.
     root.append(card(`
-      <div style="position:relative;padding-top:18px">
-        ${years.map(y => `<div style="position:absolute;top:0;left:${y.p}%;height:100%;
-          border-left:1px dashed var(--line)"><span class="small muted"
-          style="position:absolute;top:-2px;left:3px">${y.y}</span></div>`).join('')}
+      <div style="position:relative;padding-top:18px;min-width:560px">
+        <div style="position:absolute;top:0;bottom:0;left:142px;right:62px;pointer-events:none">
+          ${years.map(y => `<div style="position:absolute;top:0;left:${y.p}%;height:100%;
+            border-left:1px dashed var(--line)"><span class="small muted"
+            style="position:absolute;top:-2px;left:3px">${y.y}</span></div>`).join('')}
+        </div>
         ${people.map(p => `
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px;position:relative">
             <div style="width:132px;flex:none;font-size:13px;white-space:nowrap;overflow:hidden;

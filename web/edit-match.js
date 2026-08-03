@@ -25,7 +25,9 @@ async function api(path, opts = {}) {
 let MATCHES = [], PLAYERS = [], OPPS = [];
 
 function showCurrent() {
-  const m = MATCHES.find(x => String(x.id) === $('#match').value);
+  const val = $('#match').value;
+  loadSquad(val);
+  const m = MATCHES.find(x => String(x.id) === val);
   if (!m) { $('#current').textContent = ''; return; }
   const score = m.goals_for == null ? 'no score yet' : `${m.goals_for}–${m.goals_against}`;
   const bits = [
@@ -35,6 +37,63 @@ function showCurrent() {
     m.motm_player_id ? 'MOM set' : 'no MOM',
   ];
   $('#current').textContent = `Currently: ${bits.join(' · ')}`;
+}
+
+// The squad list under the match picker — one deletable row per performance.
+async function loadSquad(matchId) {
+  const box = $('#squad'), field = $('#squadField');
+  if (!matchId) { field.style.display = 'none'; box.innerHTML = ''; return; }
+  field.style.display = '';
+  box.innerHTML = '<div class="small muted">Loading squad…</div>';
+  try {
+    const rows = await api(
+      `performances?select=id,goals,assists,pints,errors,players(name)&match_id=eq.${encodeURIComponent(matchId)}`);
+    if (!rows.length) {
+      box.innerHTML = '<div class="small muted">No performances logged for this match yet.</div>';
+      return;
+    }
+    rows.sort((a, b) => (a.players?.name || '').localeCompare(b.players?.name || ''));
+    box.innerHTML = rows.map(r => {
+      const name = r.players?.name || `player ${r.id}`;
+      const bits = [];
+      if (r.goals) bits.push(`${r.goals}g`);
+      if (r.assists) bits.push(`${r.assists}a`);
+      if (r.pints) bits.push(`${r.pints}🍺`);
+      if (r.errors) bits.push(`${r.errors} err`);
+      const stat = bits.length ? bits.join(' · ') : 'no stats';
+      return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)">
+        <div style="flex:1;font-size:14px">${esc(name)} <span class="small muted">${esc(stat)}</span></div>
+        <button type="button" class="perf-del" data-id="${r.id}"
+          data-label="${esc(name)}'s entry for this match"
+          style="flex:none;font-size:12px;padding:4px 11px;border:1px solid var(--loss);
+                 color:var(--loss);background:transparent;border-radius:6px;cursor:pointer">Delete</button>
+      </div>`;
+    }).join('');
+  } catch (e) {
+    box.innerHTML = `<div class="small" style="color:var(--loss)">Couldn't load the squad.<br><code>${esc(e.message)}</code></div>`;
+  }
+}
+
+async function deletePerf(id, label, btn) {
+  if (!confirm(`Delete ${label}?\n\nThis removes their stats for this match and can't be undone.`)) return;
+  btn.disabled = true;
+  btn.textContent = 'Deleting…';
+  try {
+    // return=representation so an RLS-blocked delete comes back empty instead
+    // of looking like a silent success (the bug the match update had).
+    const del = await api(`performances?id=eq.${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: { Prefer: 'return=representation' },
+    });
+    if (!del || !del.length) {
+      throw new Error("Nothing was deleted — the database may not allow it yet. Has migration 10 been run?");
+    }
+    loadSquad($('#match').value);   // refresh the list
+  } catch (e) {
+    alert(`Couldn't delete.\n\n${e.message}`);
+    btn.disabled = false;
+    btn.textContent = 'Delete';
+  }
 }
 
 async function boot() {
@@ -66,6 +125,10 @@ async function boot() {
     if (pre && MATCHES.some(x => String(x.id) === pre)) $('#match').value = pre;
 
     $('#match').onchange = showCurrent;
+    $('#squad').addEventListener('click', (e) => {
+      const b = e.target.closest('.perf-del');
+      if (b) deletePerf(b.dataset.id, b.dataset.label, b);
+    });
     showCurrent();
     $('#f').style.display = '';
   } catch (e) {
